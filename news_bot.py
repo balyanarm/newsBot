@@ -8,11 +8,14 @@ TELEGRAM_BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 TELEGRAM_CHAT_ID   = os.environ["TELEGRAM_CHAT_ID"]
 ANTHROPIC_API_KEY  = os.environ["ANTHROPIC_API_KEY"]
 
-# RSS feeds to pull from (all AI-focused)
+# RSS feeds to pull from
 RSS_FEEDS = [
-    "https://tldr.tech/api/rss/ai",           # TLDR AI newsletter
-    "https://feeds.feedburner.com/oreilly/radar/atom",  # O'Reilly AI
-    "https://www.artificialintelligence-news.com/feed/",
+    "https://tldr.tech/api/rss/ai",                       # TLDR AI
+    "https://tldr.tech/api/rss/dev",                      # TLDR Dev
+    "https://tldr.tech/api/rss/tech",                     # TLDR Tech
+    "https://www.artificialintelligence-news.com/feed/",  # AI News
+    "https://simonwillison.net/atom/everything/",         # Simon Willison (Claude/LLM expert)
+    "https://github.blog/feed/",                          # GitHub Blog (Copilot, Codespaces)
 ]
 
 MAX_ITEMS_PER_FEED = 5  # how many articles to pull per feed
@@ -55,13 +58,19 @@ def summarize_with_claude(articles: list[dict]) -> str:
         messages=[{
             "role": "user",
             "content": (
-                "You are an AI news curator. Below are today's raw AI news articles.\n"
-                "Create a concise, engaging daily digest for a Telegram message.\n\n"
+                "You are a tech news curator for a senior software developer who loves AI and developer tooling.\n"
+                "Below are today's raw articles. Create a concise daily digest for Telegram.\n\n"
+                "Priority topics (highlight these first if present):\n"
+                "1. Claude Code, Anthropic updates, Claude models\n"
+                "2. AI coding tools (Cursor, Copilot, Devin, Codeium, etc.)\n"
+                "3. Developer tools, frameworks, and productivity\n"
+                "4. General AI/LLM news and research\n\n"
                 "Format rules:\n"
-                "- Start with a header line: 🤖 *AI News Digest – [today's date]*\n"
-                "- List 5–8 of the most interesting stories\n"
-                "- Each story: one bold title line + 1-2 sentence summary + the URL on its own line\n"
-                "- Use simple Telegram markdown (* for bold, no headers with #)\n"
+                "- Start with: 🤖 *AI & Dev Digest – [today's date]*\n"
+                "- Group into two sections: *🛠 Dev & Claude Code* and *🧠 AI News*\n"
+                "- List 4–5 stories per section\n"
+                "- Each story: one bold title + 1-2 sentence summary + URL on its own line\n"
+                "- Use simple Telegram markdown (* for bold, no # headers)\n"
                 "- End with a short 'That's a wrap!' line\n\n"
                 f"Articles:\n{articles_text}"
             )
