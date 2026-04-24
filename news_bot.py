@@ -50,7 +50,7 @@ def summarize_with_claude(articles: list[dict]) -> str:
 
     client = Anthropic(api_key=ANTHROPIC_API_KEY)
     response = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-5",
         max_tokens=1500,
         messages=[{
             "role": "user",
